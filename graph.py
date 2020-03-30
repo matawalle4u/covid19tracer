@@ -25,10 +25,10 @@ class Neo4jGoogleMap:
         return nodes
 
 
-url = "bolt://100.25.45.169:33389"
+url = "bolt://100.27.2.160:33349"
 googleKey = open('../../api.txt').read()
 username = "neo4j"
-password = "hall-default-sock"
+password = "dares-warnings-pound"
 query="MATCH (x) return (x)"
 
 neoGoo = Neo4jGoogleMap(googleKey, url, username, password)
