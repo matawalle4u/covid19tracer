@@ -1,14 +1,12 @@
-import os
 from neo4j import GraphDatabase
 import googlemaps
 
-googleKey = os.environ.get('GOOGLEAPI')
 class Neo4jGoogleMap:
 
-    def __init__(self, googleKey, neoUsername, neoPassword):
+    def __init__(self, googleapi, bolt_url, neoUsername, neoPassword):
 
-        self.gmaps = googlemaps.Client(key=googleKey)
-        self.graph = GraphDatabase.driver(uri=url, auth=(neoUsername, neoPassword))
+        self.gmaps = googlemaps.Client(key=googleapi)
+        self.graph = GraphDatabase.driver(uri=bolt_url, auth=(neoUsername, neoPassword))
         self.session = self.graph.session()
     
     def get_loc_names(self, lati, longi):
@@ -23,16 +21,17 @@ class Neo4jGoogleMap:
         return locs
 
     def get_nodes(self, query):
-        nodes= self.session.run()
+        nodes= self.session.run(query)
         return nodes
 
 
 url = "bolt://100.25.45.169:33389"
+googleKey = open('../../api.txt').read()
 username = "neo4j"
 password = "hall-default-sock"
 query="MATCH (x) return (x)"
 
-neoGoo = Neo4jGoogleMap(googleKey, username, password)
+neoGoo = Neo4jGoogleMap(googleKey, url, username, password)
 nodes = neoGoo.get_nodes(query)
 #places = neoGeo.get_loc_names(119682336, 84394329)
 
