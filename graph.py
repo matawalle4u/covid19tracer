@@ -1,7 +1,8 @@
+import os
 from neo4j import GraphDatabase
 import googlemaps
-googleKey ='AIzaSyAYkv0mbMv8cgbeQl7X2zWGLg9ZHiwmY7I'
 
+googleKey = os.environ.get('GOOGLEAPI')
 class Neo4jGoogleMap:
 
     def __init__(self, googleKey, neoUsername, neoPassword):
