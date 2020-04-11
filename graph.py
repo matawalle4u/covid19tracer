@@ -12,12 +12,16 @@ class Neo4jGoogleMap:
     def get_loc_names(self, lati, longi):
 
         locs=[]
-        places = self.gmaps.reverse_geocode((lati/1e7, longi/1e7))
+        places = self.gmaps.reverse_geocode((lati, longi))
         for place in places:
-            place_type = place['address_components'][0]['types'][0]
-            if place_type!='street_number':
-                name = place['address_components'][0]['long_name']
-                locs.append(name)
+            try:
+            
+                place_type = place['address_components'][0]['types'][0]
+                if place_type!='street_number':
+                    name = place['address_components'][0]['long_name']
+                    locs.append(name)
+            except:
+                pass
         return locs
 
     def get_nodes(self, query):
@@ -25,10 +29,10 @@ class Neo4jGoogleMap:
         return nodes
 
 
-url = "bolt://100.27.2.160:33349"
-googleKey = open('../../api.txt').read()
+url = "bolt://3.84.239.221:43863"
+googleKey = open('apikey.txt').read()
 username = "neo4j"
-password = "dares-warnings-pound"
+password = "curvature-total-lick"
 query="MATCH (x) return (x)"
 
 neoGoo = Neo4jGoogleMap(googleKey, url, username, password)
@@ -36,10 +40,13 @@ nodes = neoGoo.get_nodes(query)
 #places = neoGeo.get_loc_names(119682336, 84394329)
 
 for node in nodes:
-    print(node)
-    # longi = node[0]['longitude']
-    # lati = node[0]['latitude']
-    # locs = map.get_loc(lati, longi)
-    # q = "MATCH (x) SET x.location={} return (x)".format(map.get_loc(lati, longi))
-    # session.run(q)
+    longi = node[0]['longitude']
+    lati = node[0]['latitude']
+    if longi and lati:
+        geoloc = neoGoo.get_loc_names(lati,longi)
+        #print(longi, lati, geoloc)
+        # locs = map.get_loc(lati, longi)
+        q = "MATCH (x) SET x.location={} return (x)".format(geoloc)
+        #print(q)
+        neoGoo.session.run(q)
     #print(lati, longi)
