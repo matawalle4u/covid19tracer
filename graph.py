@@ -20,7 +20,7 @@ class Neo4jGoogleMap:
                 if place_type!='street_number':
                     name = place['address_components'][0]['long_name']
                     locs.append(name)
-            except:
+            except IndexError:
                 pass
         return locs
 
