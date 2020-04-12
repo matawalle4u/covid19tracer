@@ -20,14 +20,22 @@ class Neo4jGoogleMap:
                 if place_type!='street_number':
                     name = place['address_components'][0]['long_name']
                     locs.append(name)
-            except:
+            except IndexError:
                 pass
         return locs
 
     def get_nodes(self, query):
         nodes= self.session.run(query)
         return nodes
-
+		
+    def update_neo4j_node(nodes, new_value):
+        longi = node[0]['longitude']
+        lati  = node[0]['latitude']
+        for node in nodes:
+            if longi and lati:
+                geoloc = self.get_loc_names(lati, longi)
+                q= "MATCH (x) x.{}={} return (x)".format(new_value, geoloc)
+                self.session.run(q)
 
 url = "bolt://3.84.239.221:43863"
 googleKey = open('apikey.txt').read()
