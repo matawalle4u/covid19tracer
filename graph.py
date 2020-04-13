@@ -28,16 +28,17 @@ class Neo4jGoogleMap:
         nodes= self.session.run(query)
         return nodes
 		
-    def update_neo4j_node(nodes, new_value):
-        longi = node[0]['longitude']
-        lati  = node[0]['latitude']
+    def update_neo4j_node(self,nodes, new_value):
+        
         for node in nodes:
+            longi = node[0]['longitude']
+            lati  = node[0]['latitude']
             if longi and lati:
                 geoloc = self.get_loc_names(lati, longi)
                 q= "MATCH (x) x.{}={} return (x)".format(new_value, geoloc)
-                self.session.run(q)
-
-googleKey = open('apikey.txt').read()
+                #self.session.run(q)
+                print(q)
+googleKey = open('../../apikey.txt').read()
 neoGoo = Neo4jGoogleMap(googleKey, "bolt://3.84.239.221:43863", "neo4j", "curvature-total-lick")
 nodes = neoGoo.get_nodes("MATCH (x) return (x)")
 neoGoo.update_neo4j_node(nodes, 'location')
